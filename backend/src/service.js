@@ -5,12 +5,25 @@ import { connectDB } from "./config/db.js"
 
 const app = express()
 
-connectDB();
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
-app.listen(ENV.PORT, () => {
-  console.log("Server is running on port", ENV.PORT)
-})
+
+const startSever = async () => {
+  try {
+    await connectDB();
+    app.listen(ENV.PORT, () => {
+      console.log(`Server is running on port ${ENV.PORT}`);
+    });
+  } catch (error) {
+    console.error("Error starting server:", error);
+    process.exit(1);
+  }
+}
+
+startSever();
