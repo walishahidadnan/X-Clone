@@ -2,10 +2,10 @@ import express from "express"
 import cors from "cors"
 import {clerkMiddleware} from "@clerk/express"
 import { ENV } from "./config/env.js"
-import { connectDB } from "./config/db.js"
+import { connectDB } from "./config/db.js";
 
 import userRoutes from "./routes/user.route.js"
-
+import postRoutes from "./routes/post.route.js";
 
 const app = express()
 
@@ -19,7 +19,13 @@ app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
-app.get("/api/user", userRoutes)
+app.get("/api/user", userRoutes);
+app.get("/api/post", postRoutes);
+
+app.use((err, res, req) => {
+  console.error("Route not found", err);
+  res.status(500).json({ error: err.message || "Route not found" });
+})
 
 
 const startSever = async () => {
