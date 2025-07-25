@@ -7,6 +7,7 @@ import { connectDB } from "./config/db.js";
 import userRoutes from "./routes/user.route.js"
 import postRoutes from "./routes/post.route.js";
 import commentRoutes from "./routes/comment.route.js";
+import notificationRoutes from "./routes/notification.route.js";
 
 const app = express()
 
@@ -23,6 +24,7 @@ app.get("/", (req, res) => {
 app.get("/api/user", userRoutes);
 app.get("/api/post", postRoutes);
 app.get("/api/comments", commentRoutes);
+app.get("/api/notifications", notificationRoutes)
 
 app.use((err, res, req, next) => {
   console.error("Route not found", err);
