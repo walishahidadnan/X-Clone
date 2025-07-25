@@ -8,14 +8,16 @@ import userRoutes from "./routes/user.route.js"
 import postRoutes from "./routes/post.route.js";
 import commentRoutes from "./routes/comment.route.js";
 import notificationRoutes from "./routes/notification.route.js";
+import { arcjetMiddleware } from "./middleware/arcjet.middleware.js";
 
 const app = express()
 
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use(cors());
 app.use(clerkMiddleware());
+app.use(arcjetMiddleware);
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
@@ -35,9 +37,11 @@ app.use((err, res, req, next) => {
 const startSever = async () => {
   try {
     await connectDB();
-    app.listen(ENV.PORT, () => {
-      console.log(`Server is running on port ${ENV.PORT}`);
-    });
+    if(ENV.NODE_ENV !== "production"){
+      app.listen(ENV.PORT, () => {
+        console.log(`Server is running on port ${ENV.PORT}`);
+      });
+    }
   } catch (error) {
     console.error("Error starting server:", error);
     process.exit(1); 
@@ -45,3 +49,5 @@ const startSever = async () => {
 }
 
 startSever();
+
+export default app;
